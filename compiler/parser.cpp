@@ -683,6 +683,11 @@ ExprNode *Parser::parseUniExpr( bool opt ){
 	return result;
 }
 
+// Don't ask me what this does. Thanks Juan!
+float stuff(unsigned int i){
+    return *((float*)(void*)&i);
+}
+
 ExprNode *Parser::parsePrimary( bool opt ){
 
 	a_ptr<ExprNode> expr;
@@ -741,6 +746,12 @@ ExprNode *Parser::parsePrimary( bool opt ){
 		break;
 	case PI:
 		result=d_new FloatConstNode( 3.1415926535897932384626433832795f );
+		toker->next();break;
+	case INFINITY:
+		result=d_new FloatConstNode( stuff(0x7F800000) );
+		toker->next();break;
+	case NANCONST:
+		result=d_new FloatConstNode( stuff(0x7FFFFFFF) );
 		toker->next();break;
 	case BBTRUE:
 		result=d_new IntConstNode( 1 );
