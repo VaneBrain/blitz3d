@@ -2,7 +2,8 @@
 #include "std.h"
 #include "bbsys.h"
 #include "bbruntime.h"
-std::string ErrorMessagePool::memoryAccessViolation = "Memory access violation";
+std::vector<std::string> ErrorMessagePool::memoryAccessViolation;
+
 void  bbEnd(){
 	RTEX( 0 );
 }
@@ -24,8 +25,15 @@ void  bbRuntimeError( BBStr *str ){
 	RTEX( err );
 }
 
-void  bbErrorMessage( BBStr *str ){
-	ErrorMessagePool::memoryAccessViolation = *str; delete str;
+void  bbAddError( BBStr *str ){
+	ErrorMessagePool::memoryAccessViolation.push_back(*str);
+	delete str;
+}
+
+void bbRemoveErrors( int number ){
+	for (int i = 0; i < number; i++) {
+		ErrorMessagePool::memoryAccessViolation.pop_back();
+	}
 }
 
 int   bbExecFile( BBStr *f ){
@@ -148,7 +156,8 @@ void bbruntime_link( void (*rtSym)( const char *sym,void *pc ) ){
 	rtSym( "Stop",bbStop );
 	rtSym( "AppTitle$title$close_prompt=\"\"",bbAppTitle );
 	rtSym( "RuntimeError$message",bbRuntimeError );
-	rtSym( "ErrorMessage$message",bbErrorMessage );
+	rtSym( "AddError$error",bbAddError );
+	rtSym( "RemoveErrors%number", bbRemoveErrors );
 	rtSym( "ExecFile$command",bbExecFile );
 	rtSym( "Delay%millisecs",bbDelay );
 	rtSym( "%MilliSecs",bbMilliSecs );
