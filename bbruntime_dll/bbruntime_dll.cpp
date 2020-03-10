@@ -50,12 +50,14 @@ static void _cdecl seTranslator( unsigned int u,EXCEPTION_POINTERS* pExp ){
 	case EXCEPTION_INT_DIVIDE_BY_ZERO:
 		bbruntime_panic( "Integer divide by zero" );
 	case EXCEPTION_ACCESS_VIOLATION:
-		if (ErrorMessagePool::memoryAccessViolation.size() == 0) {
+		if (ErrorMessagePool::memoryAccessViolation == 0) {
 			bbruntime_panic( "Memory access violation" );
 		} else {
 			string s = "";
-			for (vector<string>::const_iterator i = ErrorMessagePool::memoryAccessViolation.begin(); i != ErrorMessagePool::memoryAccessViolation.end(); ++i) {
-				s = s + *i + "\n";
+			for (int i = 0; i < ErrorMessagePool::size; i++) {
+				if (!ErrorMessagePool::memoryAccessViolation[i].empty()) {
+					s = s + ErrorMessagePool::memoryAccessViolation[i] + "\n";
+				}
 			}
 			bbruntime_panic( s.c_str() );
 		}
