@@ -157,7 +157,7 @@ void bbruntime_link( void (*rtSym)( const char *sym,void *pc ) ){
 	rtSym( "AppTitle$title$close_prompt=\"\"",bbAppTitle );
 	rtSym( "RuntimeError$message",bbRuntimeError );
 	rtSym( "AddError$error",bbAddError );
-	rtSym( "RemoveErrors%number", bbRemoveErrors );
+	rtSym( "RemoveErrors#number", bbRemoveErrors );
 	rtSym( "ExecFile$command",bbExecFile );
 	rtSym( "Delay%millisecs",bbDelay );
 	rtSym( "%MilliSecs",bbMilliSecs );
