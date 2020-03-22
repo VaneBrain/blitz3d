@@ -80,6 +80,8 @@ static void makeKeywords(){
 	alphaTokes["Sar"]=SAR;
 
 	alphaTokes["Null"]=NULLCONST;
+	alphaTokes["Infinity"]=INFINITY;
+	alphaTokes["NaN"]=NANCONST;
 
 	map<string,int>::const_iterator it;
 	for( it=alphaTokes.begin();it!=alphaTokes.end();++it ){

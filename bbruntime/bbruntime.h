@@ -20,6 +20,7 @@ void bbruntime_panic( const char *err );
 
 class ErrorMessagePool {
     public:
-        static std::string memoryAccessViolation;
+        static std::string * memoryAccessViolation;
+		static int size;
 };
 #endif
