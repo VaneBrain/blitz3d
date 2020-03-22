@@ -3,7 +3,7 @@
 #include "bbsys.h"
 #include "bbruntime.h"
 
-std::string * ErrorMessagePool::memoryAccessViolation;
+std::string * ErrorMessagePool::memoryAccessViolation = 0;
 int ErrorMessagePool::size = 0;
 
 void  bbEnd(){
