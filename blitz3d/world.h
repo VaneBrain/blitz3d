@@ -10,6 +10,8 @@
 #include "mirror.h"
 #include "listener.h"
 
+#define WORLD_COLLISION_TYPES 16
+
 class World{
 public:
 	//collision methods
@@ -43,8 +45,8 @@ private:
 		int dst_type,method,response;
 	};
 
-	vector<CollInfo> _collInfo[1000];
-	vector<Object*> _objsByType[1000];
+	vector<CollInfo> _collInfo[WORLD_COLLISION_TYPES];
+	vector<Object*> _objsByType[WORLD_COLLISION_TYPES];
 
 	void collide( Object *src );
 	void render( Camera *c,Mirror *m );
