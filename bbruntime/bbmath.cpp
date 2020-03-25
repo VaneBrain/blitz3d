@@ -31,7 +31,13 @@ float bbClamp( float v, float lo, float hi){
 	if (lo > hi){
 		std::swap(lo,hi);
 	}
-	return (float)max(lo, min(v, hi)); 
+	if (v < lo){
+		return lo;
+	} else if (v > hi){
+		return hi;
+	} else{
+		return v;
+	}
 }
 
 //return rand float from 0...1
