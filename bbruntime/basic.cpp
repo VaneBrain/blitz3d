@@ -476,7 +476,7 @@ BBStr *_bbReadStr(){
 }
 
 int _bbAbs( int n ){
-	return n>=0 ? n : -n;
+	return n & 0x7FFFFFFF;
 }
 
 int _bbSgn( int n ){
