@@ -9,10 +9,10 @@
 char _credits[]=
 "\r\n"
 "Programming and design: Mark Sibly\r\n\r\n"
+"Fixing this shit: Vane Brain And Salvage\r\n\r\n"
 "Documentation: Mark Sibly, Simon Harrison, Paul Gerfen, Shane Monroe and the Blitz Doc Team\r\n\r\n"
 "Testing and support: James Boyd, Simon Armstrong and the Blitz Dev Team\r\n\r\n"
-"Image loader courtesy of FreeImage by Floris van den berg\r\n\r\n"
-"Please visit www.blitzbasic.com for all your Blitz related needs!";
+"Image loader courtesy of FreeImage by Floris van den berg\r\n\r\n";
 
 /*
 char _credits[]=
@@ -65,7 +65,7 @@ public:
 	}
 };
 
-void aboutBlitz( bool delay ){
+void aboutBlitz(){
 
 	AfxGetMainWnd()->EnableWindow(0);
 
@@ -94,42 +94,13 @@ void aboutBlitz( bool delay ){
 	t+="Blitz2D";
 #endif
 
-#ifdef EDU
-	t+=" - Educational Version";
-#else
-#ifdef DEMO
-	t+=" - Demo Version\n\n";
-	/*
-	int n=shareProtCheck();
-	if( n>1 ) t+=itoa(n)+" runs left";
-	else if( n ) t+=itoa(n)+" run left";
-	else t+="expired";
-	t+=")\n\n";
-	*/
-#else
-	t+=" - Release Version\n\n";
-#endif
-#endif
+t+=" - Release Version\n\n";
 
 	about.GetDlgItem( IDC_PRODUCT )->SetWindowText( t.c_str() );
 
 //	t="IDE V"+ide_v+"  Linker V"+lnk_v+"  Runtime V"+run_v;
 	t="Runtime V"+itoa((VERSION&0xffff)/1000)+"."+itoa((VERSION&0xffff)%1000);
 	about.GetDlgItem( IDC_VERSION )->SetWindowText( t.c_str() );
-
-#ifdef DEMO
-
-	if( delay ){
-		about.GetDlgItem( IDOK )->ShowWindow( SW_HIDE );
-		about.GetDlgItem( IDC_PROGRESS1 )->ShowWindow( SW_SHOW );
-		for( int k=0;k<100;++k ){
-			((CProgressCtrl*)about.GetDlgItem( IDC_PROGRESS1 ))->SetPos( k+1 );
-			about.wait( 50 );
-		}
-		about.GetDlgItem( IDOK )->ShowWindow( SW_SHOW );
-	}
-
-#endif
 
 	about.GetDlgItem( IDC_PROGRESS1 )->ShowWindow( SW_HIDE );
 	about.wait();
