@@ -40,11 +40,6 @@ float bbClamp( float v, float lo, float hi){
 	}
 }
 
-int bbIsNaN( float n ){
-    unsigned int i = *((unsigned int*)(void*)&n);
-    return ((i&0x7F800000)==0x7F800000) && ((i&(~0xFF800000)) != 0);
-}
-
 //return rand float from 0...1
 static inline float rnd(){
 	rnd_state=RND_A*(rnd_state%RND_Q)-RND_R*(rnd_state/RND_Q);
@@ -99,7 +94,6 @@ void math_link( void (*rtSym)( const char *sym,void *pc ) ){
 	rtSym( "#Min#n#m",bbMin );
 	rtSym( "#Max#n#m",bbMax );
 	rtSym( "#Clamp#v#lo#hi",bbClamp );
-	rtSym( "%IsNaN#n",bbIsNaN );
 	rtSym( "#Rnd#from#to=0",bbRnd );
 	rtSym( "%Rand%from%to=1",bbRand );
 	rtSym( "SeedRnd%seed",bbSeedRnd );

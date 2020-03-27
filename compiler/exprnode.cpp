@@ -321,7 +321,6 @@ ExprNode *UniExprNode::semant( Environ *e ){
 			case '-':e=d_new IntConstNode( -c->intValue() );break;
 			case ABS:e=d_new IntConstNode( c->intValue()>=0 ? c->intValue() : -c->intValue() );break;
 			case SGN:e=d_new IntConstNode( c->intValue()>0 ? 1 : (c->intValue()<0 ? -1 : 0) );break;
-			case POWTWO:e=d_new IntConstNode( c->intValue()*c->intValue() );break;
 			}
 		}else{
 			switch( op ){
@@ -329,7 +328,6 @@ ExprNode *UniExprNode::semant( Environ *e ){
 			case '-':e=d_new FloatConstNode( -c->floatValue() );break;
 			case ABS:e=d_new FloatConstNode( c->floatValue()>=0 ? c->floatValue() : -c->floatValue() );break;
 			case SGN:e=d_new FloatConstNode( c->floatValue()>0 ? 1 : (c->floatValue()<0 ? -1 : 0) );break;
-			case POWTWO:e=d_new FloatConstNode( c->floatValue()*c->floatValue() );break;
 			}
 		}
 		delete this;
@@ -347,7 +345,6 @@ TNode *UniExprNode::translate( Codegen *g ){
 		case '-':n=IR_NEG;break;
 		case ABS:return call( "__bbAbs",l );
 		case SGN:return call( "__bbSgn",l );
-		case POWTWO:return call( "__bbPowTwo", l );
 		}
 	}else{
 		switch( op ){
@@ -355,7 +352,6 @@ TNode *UniExprNode::translate( Codegen *g ){
 		case '-':n=IR_FNEG;break;
 		case ABS:return fcall( "__bbFAbs",l );
 		case SGN:return fcall( "__bbFSgn",l );
-		case POWTWO:return fcall( "__bbFPowTwo", l );
 		}
 	}
 	return d_new TNode( n,l,0 );
