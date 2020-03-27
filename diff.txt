@@ -1,0 +1,76 @@
+diff --git a/compiler/codegen.h b/compiler/codegen.h
+index d29615d..fe022f0 100644
+--- a/compiler/codegen.h
++++ b/compiler/codegen.h
+@@ -12,11 +12,11 @@ enum{
+ 	IR_JSR,IR_RET,IR_AND,IR_LOR,IR_OR,IR_XOR,IR_SHL,IR_SHR,IR_SAR,
+ 
+ 	IR_CALL,IR_RETURN,IR_CAST,
+-	IR_NEG,IR_ADD,IR_SUB,IR_MUL,IR_DIV,
++	IR_NEG,IR_ADD,IR_SUB,IR_MUL,IR_DIV,IR_POWTWO,
+ 	IR_SETEQ,IR_SETNE,IR_SETLT,IR_SETGT,IR_SETLE,IR_SETGE,
+ 
+ 	IR_FCALL,IR_FRETURN,IR_FCAST,
+-	IR_FNEG,IR_FADD,IR_FSUB,IR_FMUL,IR_FDIV,
++	IR_FNEG,IR_FADD,IR_FSUB,IR_FMUL,IR_FDIV,IR_FPOWTWO,
+ 	IR_FSETEQ,IR_FSETNE,IR_FSETLT,IR_FSETGT,IR_FSETLE,IR_FSETGE,
+ };
+ 
+diff --git a/compiler/codegen_x86/codegen_x86.cpp b/compiler/codegen_x86/codegen_x86.cpp
+index 7ba0d4e..f012cf1 100644
+--- a/compiler/codegen_x86/codegen_x86.cpp
++++ b/compiler/codegen_x86/codegen_x86.cpp
+@@ -117,6 +117,7 @@ Tile *Codegen_x86::munchUnary( TNode *t ){
+ 	string s;
+ 	switch( t->op ){
+ 	case IR_NEG:s="\tneg\t%l\n";break;
++	case IR_POWTWO:s="\timul\t%l,%l\n";break;
+ 	default:return 0;
+ 	}
+ 	return d_new Tile( s,munchReg( t->l ) );
+@@ -220,6 +221,7 @@ Tile *Codegen_x86::munchFPUnary( TNode *t ){
+ 	string s;
+ 	switch( t->op ){
+ 	case IR_FNEG:s="\tfchs\n";break;
++	case IR_FPOWTWO:s="\tfmulp\tst(0)\n";break;
+ 	default:return 0;
+ 	}
+ 	return d_new Tile( s,munchFP( t->l ) );
+@@ -408,7 +410,7 @@ Tile *Codegen_x86::munchReg( TNode *t ){
+ 	case IR_CONST:
+ 		q=d_new Tile( "\tmov\t%l,"+itoa(t->iconst)+"\n" );
+ 		break;
+-	case IR_NEG:
++	case IR_NEG:case IR_POWTWO:
+ 		q=munchUnary( t );
+ 		break;
+ 	case IR_AND:case IR_LOR:case IR_OR:case IR_XOR:
+@@ -451,7 +453,7 @@ Tile *Codegen_x86::munchFP( TNode *t ){
+ 		s="\tpush\t%l\n\tfild\t[esp]\n\tpop\t%l\n";
+ 		q=d_new Tile( s,munchReg( t->l ) );
+ 		break;
+-	case IR_FNEG:
++	case IR_FNEG:case IR_FPOWTWO:
+ 		q=munchFPUnary( t );
+ 		break;
+ 	case IR_FADD:case IR_FSUB:case IR_FMUL:case IR_FDIV:
+diff --git a/compiler/exprnode.cpp b/compiler/exprnode.cpp
+index fcb9556..9affd5a 100644
+--- a/compiler/exprnode.cpp
++++ b/compiler/exprnode.cpp
+@@ -345,6 +345,7 @@ TNode *UniExprNode::translate( Codegen *g ){
+ 		case '-':n=IR_NEG;break;
+ 		case ABS:return call( "__bbAbs",l );
+ 		case SGN:return call( "__bbSgn",l );
++		case POWTWO:return d_new TNode(IR_POWTWO, l);
+ 		}
+ 	}else{
+ 		switch( op ){
+@@ -352,6 +353,7 @@ TNode *UniExprNode::translate( Codegen *g ){
+ 		case '-':n=IR_FNEG;break;
+ 		case ABS:return fcall( "__bbFAbs",l );
+ 		case SGN:return fcall( "__bbFSgn",l );
++		case POWTWO:return d_new TNode(IR_FPOWTWO, l);
+ 		}
+ 	}
+ 	return d_new TNode( n,l,0 );

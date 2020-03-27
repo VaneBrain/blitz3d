@@ -117,6 +117,7 @@ Tile *Codegen_x86::munchUnary( TNode *t ){
 	string s;
 	switch( t->op ){
 	case IR_NEG:s="\tneg\t%l\n";break;
+	case IR_POWTWO:s="\timul\t%l,%l\n";break;
 	default:return 0;
 	}
 	return d_new Tile( s,munchReg( t->l ) );
@@ -228,6 +229,7 @@ Tile *Codegen_x86::munchFPUnary( TNode *t ){
 	string s;
 	switch( t->op ){
 	case IR_FNEG:s="\tfchs\n";break;
+	case IR_FPOWTWO:s="\tfmulp\tst(0)\n";break;
 	default:return 0;
 	}
 	return d_new Tile( s,munchFP( t->l ) );
@@ -420,7 +422,7 @@ Tile *Codegen_x86::munchReg( TNode *t ){
 	case IR_CONST:
 		q=d_new Tile( "\tmov\t%l,"+itoa(t->iconst)+"\n" );
 		break;
-	case IR_NEG:
+	case IR_NEG:case IR_POWTWO:
 		q=munchUnary( t );
 		break;
 	case IR_AND:case IR_LOR:case IR_OR:case IR_XOR:
@@ -463,7 +465,7 @@ Tile *Codegen_x86::munchFP( TNode *t ){
 		s="\tpush\t%l\n\tfild\t[esp]\n\tpop\t%l\n";
 		q=d_new Tile( s,munchReg( t->l ) );
 		break;
-	case IR_FNEG:
+	case IR_FNEG:case IR_FPOWTWO:
 		q=munchFPUnary( t );
 		break;
 	case IR_FADD:case IR_FSUB:case IR_FMUL:case IR_FDIV:
