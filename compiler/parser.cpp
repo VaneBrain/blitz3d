@@ -2,6 +2,7 @@
 #include "std.h"
 #include <cstdlib>
 #include "parser.h"
+#include <math.h>
 
 static const int TEXTLIMIT=1024*1024-1;
 
@@ -659,7 +660,7 @@ ExprNode *Parser::parseUniExpr( bool opt ){
 		result=parseUniExpr( false );
 		result=d_new AfterNode( result );
 		break;
-	case '+':case '-':case '~':case ABS:case SGN:
+	case '+':case '-':case '~':case ABS:case SGN:case POWTWO:
 		toker->next();
 		result=parseUniExpr( false );
 		if( c=='~' ){
@@ -672,11 +673,6 @@ ExprNode *Parser::parseUniExpr( bool opt ){
 		result=parsePrimary( opt );
 	}
 	return result;
-}
-
-// Don't ask me what this does. Thanks Juan!
-float stuff(unsigned int i){
-    return *((float*)(void*)&i);
 }
 
 ExprNode *Parser::parsePrimary( bool opt ){
@@ -739,10 +735,7 @@ ExprNode *Parser::parsePrimary( bool opt ){
 		result=d_new FloatConstNode( 3.1415926535897932384626433832795f );
 		toker->next();break;
 	case INFINITY:
-		result=d_new FloatConstNode( stuff(0x7F800000) );
-		toker->next();break;
-	case NANCONST:
-		result=d_new FloatConstNode( stuff(0x7FFFFFFF) );
+		result=d_new FloatConstNode(INFINITY);
 		toker->next();break;
 	case BBTRUE:
 		result=d_new IntConstNode( 1 );
